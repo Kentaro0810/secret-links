@@ -1,1 +1,112 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Secret Links</title>
+
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main class="app">
+    <!-- ログイン画面 -->
+    <section id="loginScreen" class="login-card">
+      <p class="badge">Private Link Collection</p>
+
+      <h1>秘密のリンク集</h1>
+
+      <p class="description">
+        パスワードを知っている人だけがリンク集を表示できます。
+      </p>
+
+      <form id="loginForm" class="login-form">
+        <label for="passwordInput">パスワード</label>
+
+        <input
+          id="passwordInput"
+          type="password"
+          placeholder="パスワードを入力"
+          autocomplete="current-password"
+        />
+
+        <button type="submit" class="main-button">
+          入る
+        </button>
+      </form>
+
+      <p id="loginMessage" class="message"></p>
+
+      <p class="note">
+        ※ このサイトはGitHub Pages用の簡易ロックです。
+      </p>
+    </section>
+
+    <!-- リンク集画面 -->
+    <section id="linksScreen" class="links-screen hidden">
+      <header class="header">
+        <div>
+          <p class="badge">Unlocked</p>
+
+          <h1>リンク集</h1>
+
+          <p class="description">
+            自分で選んだリンクをまとめるページです。
+          </p>
+        </div>
+
+        <button id="logoutButton" class="logout-button" type="button">
+          ログアウト
+        </button>
+      </header>
+
+      <section class="link-grid">
+        <a class="link-card" href="https://kentaro0810.github.io/timer-app/" target="_blank" rel="noopener noreferrer">
+          <span class="icon">⏱️</span>
+          <h2>自分用タイマー</h2>
+          <p>勉強・作業・休憩に使えるシンプルタイマー</p>
+        </a>
+
+        <a class="link-card" href="https://kentaro0810.github.io/memo-app/" target="_blank" rel="noopener noreferrer">
+          <span class="icon">📘</span>
+          <h2>自分用メモ帳</h2>
+          <p>思いついたことをすぐ保存できます</p>
+        </a>
+
+        <a class="link-card" href="https://kentaro0810.github.io/todo-site/" target="_blank" rel="noopener noreferrer">
+          <span class="icon">🎮</span>
+          <h2>自分用ToDo管理サイト</h2>
+          <p>タスク管理</p>
+        </a>
+
+        <a class="link-card" href="https://kentaro0810.github.io/roulette-picker/" target="_blank" rel="noopener noreferrer">
+          <span class="icon">⭐️</span>
+          <h2>ルーレット抽選アプリ</h2>
+          <p>ルーレットをできます</p>
+        </a>
+
+        <a class="link-card" href="https://kentaro0810.github.io/password-generator/" target="_blank" rel="noopener noreferrer">
+          <span class="icon">🛠️</span>
+          <h2>パスワード自動生成ツール</h2>
+          <p>安全な乱数を使って、ランダムなパスワードを生成します。</p>
+        </a>
+
+        <a class="link-card" href="https://kentaro0810.github.io/bulk-url-opener/" target="_blank" rel="noopener noreferrer">
+          <span class="icon">📁</span>
+          <h2>一括URLオープンツール</h2>
+          <p>複数のURLを入力して、まとめて新しいタブで開けます。</p>
+        </a>
+
+        <a class="link-card" href="https://kentaro0810.github.io/color-palette-maker/" target="_blank" rel="noopener noreferrer">
+          <span class="icon">🎨</span>
+          <h2>カラーパレット作成ツール</h2>
+          <p>ランダムに色を生成して、気に入った配色を保存できます。</p>
+        </a>
+      </section>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
 
