@@ -1,5 +1,3 @@
-# secret-links
-# secret-links
 # Secret Links
 
 パスワードを入力するとリンク集を表示する、GitHub Pages用の簡易ロック付きリンク集サイトです。
