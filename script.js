@@ -95,6 +95,15 @@ const tools = [
     icon: "⚡",
     url: "https://kentaro0810.github.io/reaction-test/",
     version: "1.0.0"
+  },
+  {
+    id: "habit-tracker",
+    name: "習慣トラッカー",
+    description: "毎日の習慣を記録し、達成率と連続達成日数を確認できます",
+    category: "management",
+    icon: "🌱",
+    url: "https://kentaro0810.github.io/habit-tracker/",
+    version: "1.0.0"
   }
 ];
 
