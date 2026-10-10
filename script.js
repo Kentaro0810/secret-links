@@ -181,6 +181,15 @@ const tools = [
     icon: "🖼️",
     url: "https://kentaro0810.github.io/image-optimizer/",
     version: "1.0.0"
+  },
+  {
+    id: "memory-game",
+    name: "神経衰弱",
+    description: "カードをめくって同じ絵柄のペアをそろえるゲームです",
+    category: "game",
+    icon: "🃏",
+    url: "https://kentaro0810.github.io/memory-game/",
+    version: "1.0.0"
   }
 ];
 
