@@ -131,6 +131,15 @@ const tools = [
     icon: "📊",
     url: "https://kentaro0810.github.io/study-time-tracker/",
     version: "1.0.0"
+  },
+  {
+    id: "packing-checklist",
+    name: "持ち物チェックリスト",
+    description: "旅行・学校・部活動などの持ち物を用途別に整理して確認できます",
+    category: "management",
+    icon: "🎒",
+    url: "https://kentaro0810.github.io/packing-checklist/",
+    version: "1.0.0"
   }
 ];
 
