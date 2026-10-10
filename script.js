@@ -104,6 +104,15 @@ const tools = [
     icon: "🌱",
     url: "https://kentaro0810.github.io/habit-tracker/",
     version: "1.0.0"
+  },
+  {
+    id: "countdown-manager",
+    name: "カウントダウン管理",
+    description: "予定日時までの残り日数と時間をリアルタイムで確認できます",
+    category: "management",
+    icon: "📅",
+    url: "https://kentaro0810.github.io/countdown-manager/",
+    version: "1.0.0"
   }
 ];
 
