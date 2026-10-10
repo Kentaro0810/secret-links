@@ -86,6 +86,15 @@ const tools = [
     icon: "🔢",
     url: "https://kentaro0810.github.io/character-counter/",
     version: "1.0.0"
+  },
+  {
+    id: "reaction-test",
+    name: "反射神経テスト",
+    description: "画面が緑色に変わった瞬間にタップして反応時間を測定します",
+    category: "game",
+    icon: "⚡",
+    url: "https://kentaro0810.github.io/reaction-test/",
+    version: "1.0.0"
   }
 ];
 
