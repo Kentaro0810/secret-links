@@ -172,6 +172,15 @@ const tools = [
     icon: "🌈",
     url: "https://kentaro0810.github.io/gradient-maker/",
     version: "1.0.0"
+  },
+  {
+    id: "image-optimizer",
+    name: "画像圧縮・サイズ変更",
+    description: "画像の容量・大きさ・形式をブラウザー内で調整できます",
+    category: "design",
+    icon: "🖼️",
+    url: "https://kentaro0810.github.io/image-optimizer/",
+    version: "1.0.0"
   }
 ];
 
