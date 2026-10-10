@@ -281,3 +281,28 @@ input:focus-visible {
     flex: 1 1 calc(50% - 8px);
   }
 }
+
+
+/* 検索・お気に入り・最近使ったツール */
+.portal-tools { display:grid; grid-template-columns:minmax(260px,1fr) auto; gap:12px; margin:0 0 18px; }
+.search-box { display:flex; align-items:center; gap:10px; padding:8px 10px 8px 14px; border:1px solid rgba(255,255,255,.28); border-radius:16px; background:rgba(255,255,255,.11); }
+.search-box input { flex:1; min-width:0; padding:6px 0; border:0; background:transparent; color:#fff; font-size:16px; outline:0; }
+.search-box input::placeholder { color:#cbd5e1; }
+.clear-search { padding:7px 10px; border:0; border-radius:10px; background:rgba(255,255,255,.17); color:#fff; font-weight:800; }
+.view-filter { display:flex; gap:8px; }
+.view-button { padding:11px 14px; border:1px solid rgba(255,255,255,.3); border-radius:14px; background:rgba(255,255,255,.1); color:#e2e8f0; font-weight:800; }
+.view-button.active { background:#fff; color:#1d4ed8; }
+.quick-section { margin:0 0 20px; padding:18px; border:1px solid rgba(255,255,255,.2); border-radius:20px; background:rgba(255,255,255,.08); }
+.quick-heading { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:12px; }
+.quick-heading h2 { margin:0; color:#fff; font-size:18px; }
+.quick-heading button { padding:7px 10px; border:0; border-radius:10px; background:rgba(255,255,255,.14); color:#e2e8f0; }
+.quick-grid { display:flex; gap:10px; overflow-x:auto; padding-bottom:4px; }
+.quick-link { flex:0 0 190px; display:flex; align-items:center; gap:10px; padding:12px; border-radius:15px; background:#fff; color:#0f172a; text-decoration:none; font-weight:850; }
+.quick-link span { font-size:28px; }
+.link-card { position:relative; }
+.favorite-button { position:absolute; top:13px; right:13px; z-index:2; width:40px; height:40px; border:0; border-radius:50%; background:#e2e8f0; color:#64748b; font-size:21px; line-height:1; }
+.favorite-button.active { background:#fef3c7; color:#d97706; }
+.link-card h2 { padding-right:38px; }
+.view-button:focus-visible,.clear-search:focus-visible,.favorite-button:focus-visible,.quick-heading button:focus-visible { outline:3px solid #60a5fa; outline-offset:4px; }
+@media (max-width:760px){ .portal-tools{grid-template-columns:1fr}.view-filter{display:grid;grid-template-columns:repeat(3,1fr)}.view-button{padding:10px 7px;font-size:13px} }
+@media (max-width:560px){ .quick-link{flex-basis:165px}.search-box{border-radius:14px} }

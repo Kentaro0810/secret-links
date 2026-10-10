@@ -8,8 +8,22 @@ const linkGrid = document.getElementById("linkGrid");
 const resultCount = document.getElementById("resultCount");
 const emptyMessage = document.getElementById("emptyMessage");
 const filterButtons = document.querySelectorAll(".filter-button");
+const searchInput = document.getElementById("searchInput");
+const clearSearchButton = document.getElementById("clearSearchButton");
+const viewButtons = document.querySelectorAll(".view-button");
+const recentSection = document.getElementById("recentSection");
+const recentGrid = document.getElementById("recentGrid");
+const clearRecentButton = document.getElementById("clearRecentButton");
 
 const LOGIN_STORAGE_KEY = "secret-links-login";
+const FAVORITES_KEY = "secret-links-favorites-v1";
+const RECENT_KEY = "secret-links-recent-v1";
+const RECENT_LIMIT = 6;
+let currentCategory = "all";
+let currentView = "all";
+let searchQuery = "";
+let favorites = readStringArray(FAVORITES_KEY);
+let recentTools = readStringArray(RECENT_KEY);
 
 // 簡易ロック用のSHA-256ハッシュです。秘密情報の保護には使用できません。
 const PASSWORD_HASH = "1471dd23b36096ee8f815f65e9ccba81276a5decfa8fe7bb54741cc5c938900e";
@@ -151,28 +165,65 @@ async function sha256(text) {
     .join("");
 }
 
+function readStringArray(key) {
+  try {
+    const value = JSON.parse(localStorage.getItem(key));
+    return Array.isArray(value) ? value.filter((item) => typeof item === "string") : [];
+  } catch {
+    return [];
+  }
+}
+
+function savePortalState() {
+  localStorage.setItem(FAVORITES_KEY, JSON.stringify(favorites));
+  localStorage.setItem(RECENT_KEY, JSON.stringify(recentTools));
+}
+
+function isFavorite(id) {
+  return favorites.includes(id);
+}
+
+function toggleFavorite(id) {
+  favorites = isFavorite(id) ? favorites.filter((item) => item !== id) : [id, ...favorites];
+  savePortalState();
+  applyFilters();
+}
+
+function recordRecent(id) {
+  recentTools = [id, ...recentTools.filter((item) => item !== id)].slice(0, RECENT_LIMIT);
+  savePortalState();
+  renderRecent();
+}
+
 function createToolCard(tool) {
-  const card = document.createElement("a");
+  const card = document.createElement("article");
   card.className = "link-card";
-  card.href = tool.url;
-  card.target = "_blank";
-  card.rel = "noopener noreferrer";
-  card.dataset.toolId = tool.id;
-  card.dataset.category = tool.category;
-  card.setAttribute("aria-label", `${tool.name}を新しいタブで開く`);
+
+  const favorite = document.createElement("button");
+  favorite.type = "button";
+  favorite.className = `favorite-button${isFavorite(tool.id) ? " active" : ""}`;
+  favorite.textContent = isFavorite(tool.id) ? "★" : "☆";
+  favorite.setAttribute("aria-label", `${tool.name}をお気に入り${isFavorite(tool.id) ? "から外す" : "に追加"}`);
+  favorite.addEventListener("click", () => toggleFavorite(tool.id));
+
+  const link = document.createElement("a");
+  link.className = "card-main-link";
+  link.href = tool.url;
+  link.target = "_blank";
+  link.rel = "noopener noreferrer";
+  link.setAttribute("aria-label", `${tool.name}を新しいタブで開く`);
+  link.addEventListener("click", () => recordRecent(tool.id));
 
   const icon = document.createElement("span");
   icon.className = "icon";
   icon.setAttribute("aria-hidden", "true");
   icon.textContent = tool.icon;
-
   const title = document.createElement("h2");
   title.textContent = tool.name;
-
   const description = document.createElement("p");
   description.textContent = tool.description;
-
-  card.append(icon, title, description);
+  link.append(icon, title, description);
+  card.append(favorite, link);
   return card;
 }
 
@@ -180,23 +231,55 @@ function renderTools(toolList) {
   const fragment = document.createDocumentFragment();
   toolList.forEach((tool) => fragment.appendChild(createToolCard(tool)));
   linkGrid.replaceChildren(fragment);
-
   resultCount.textContent = `${toolList.length}件のツールを表示中`;
   emptyMessage.classList.toggle("hidden", toolList.length !== 0);
 }
 
-function selectCategory(category) {
-  const filteredTools = category === "all"
-    ? tools
-    : tools.filter((tool) => tool.category === category);
+function renderRecent() {
+  const recent = recentTools.map((id) => tools.find((tool) => tool.id === id)).filter(Boolean);
+  recentSection.classList.toggle("hidden", recent.length === 0 || currentView === "recent");
+  recentGrid.replaceChildren(...recent.map((tool) => {
+    const link = document.createElement("a");
+    link.className = "quick-link";
+    link.href = tool.url;
+    link.target = "_blank";
+    link.rel = "noopener noreferrer";
+    link.addEventListener("click", () => recordRecent(tool.id));
+    const icon = document.createElement("span"); icon.textContent = tool.icon;
+    const name = document.createElement("strong"); name.textContent = tool.name;
+    link.append(icon, name);
+    return link;
+  }));
+}
 
+function applyFilters() {
+  const normalized = searchQuery.trim().toLowerCase();
+  let filtered = tools.filter((tool) => currentCategory === "all" || tool.category === currentCategory);
+  if (currentView === "favorites") filtered = filtered.filter((tool) => isFavorite(tool.id));
+  if (currentView === "recent") filtered = recentTools.map((id) => filtered.find((tool) => tool.id === id)).filter(Boolean);
+  if (normalized) filtered = filtered.filter((tool) => `${tool.name} ${tool.description}`.toLowerCase().includes(normalized));
+  renderTools(filtered);
+  renderRecent();
+}
+
+function selectCategory(category) {
+  currentCategory = category;
   filterButtons.forEach((button) => {
     const selected = button.dataset.category === category;
     button.classList.toggle("active", selected);
     button.setAttribute("aria-pressed", String(selected));
   });
+  applyFilters();
+}
 
-  renderTools(filteredTools);
+function selectView(view) {
+  currentView = view;
+  viewButtons.forEach((button) => {
+    const selected = button.dataset.view === view;
+    button.classList.toggle("active", selected);
+    button.setAttribute("aria-pressed", String(selected));
+  });
+  applyFilters();
 }
 
 function showLinksScreen() {
@@ -251,9 +334,25 @@ function checkLoginStatus() {
 
 loginForm.addEventListener("submit", handleLogin);
 logoutButton.addEventListener("click", logout);
-filterButtons.forEach((button) => {
-  button.addEventListener("click", () => selectCategory(button.dataset.category));
+filterButtons.forEach((button) => button.addEventListener("click", () => selectCategory(button.dataset.category)));
+viewButtons.forEach((button) => button.addEventListener("click", () => selectView(button.dataset.view)));
+searchInput.addEventListener("input", () => {
+  searchQuery = searchInput.value;
+  clearSearchButton.classList.toggle("hidden", !searchQuery);
+  applyFilters();
+});
+clearSearchButton.addEventListener("click", () => {
+  searchInput.value = "";
+  searchQuery = "";
+  clearSearchButton.classList.add("hidden");
+  searchInput.focus();
+  applyFilters();
+});
+clearRecentButton.addEventListener("click", () => {
+  recentTools = [];
+  savePortalState();
+  applyFilters();
 });
 
-renderTools(tools);
+applyFilters();
 checkLoginStatus();

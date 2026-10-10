@@ -40,6 +40,24 @@
         <button id="logoutButton" class="logout-button" type="button">ログアウト</button>
       </header>
 
+      <section class="portal-tools" aria-label="ツールの検索と表示切り替え">
+        <div class="search-box">
+          <span aria-hidden="true">🔎</span>
+          <input id="searchInput" type="search" placeholder="ツール名・説明から検索" autocomplete="off" />
+          <button id="clearSearchButton" class="clear-search hidden" type="button">クリア</button>
+        </div>
+        <div class="view-filter" aria-label="表示するツール">
+          <button class="view-button active" type="button" data-view="all" aria-pressed="true">すべて</button>
+          <button class="view-button" type="button" data-view="favorites" aria-pressed="false">★ お気に入り</button>
+          <button class="view-button" type="button" data-view="recent" aria-pressed="false">🕘 最近使った</button>
+        </div>
+      </section>
+
+      <section id="recentSection" class="quick-section hidden" aria-labelledby="recentTitle">
+        <div class="quick-heading"><h2 id="recentTitle">最近使ったツール</h2><button id="clearRecentButton" type="button">履歴を消す</button></div>
+        <div id="recentGrid" class="quick-grid"></div>
+      </section>
+
       <nav class="category-filter" aria-label="ツールのカテゴリー">
         <button class="filter-button active" type="button" data-category="all" aria-pressed="true">すべて</button>
         <button class="filter-button" type="button" data-category="management" aria-pressed="false">時間・管理</button>
@@ -52,7 +70,7 @@
 
       <p id="resultCount" class="result-count" aria-live="polite"></p>
       <section id="linkGrid" class="link-grid" aria-label="ツール一覧"></section>
-      <p id="emptyMessage" class="empty-message hidden">このカテゴリーのツールはまだありません。</p>
+      <p id="emptyMessage" class="empty-message hidden">条件に合うツールはありません。</p>
     </section>
   </main>
 
