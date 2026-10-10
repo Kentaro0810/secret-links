@@ -122,6 +122,15 @@ const tools = [
     icon: "📚",
     url: "https://kentaro0810.github.io/flashcard-app/",
     version: "1.0.0"
+  },
+  {
+    id: "study-time-tracker",
+    name: "学習時間記録",
+    description: "教科別の学習時間を記録し、今日・今週・今月の合計を確認できます",
+    category: "study",
+    icon: "📊",
+    url: "https://kentaro0810.github.io/study-time-tracker/",
+    version: "1.0.0"
   }
 ];
 
