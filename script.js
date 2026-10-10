@@ -154,6 +154,15 @@ const tools = [
     icon: "🎒",
     url: "https://kentaro0810.github.io/packing-checklist/",
     version: "1.0.0"
+  },
+  {
+    id: "backup-center",
+    name: "一括バックアップ管理",
+    description: "各ツールのブラウザーデータをまとめて保存・復元できます",
+    category: "management",
+    icon: "📦",
+    url: "https://kentaro0810.github.io/backup-center/",
+    version: "1.0.0"
   }
 ];
 
