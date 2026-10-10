@@ -113,6 +113,15 @@ const tools = [
     icon: "📅",
     url: "https://kentaro0810.github.io/countdown-manager/",
     version: "1.0.0"
+  },
+  {
+    id: "flashcard-app",
+    name: "暗記カード",
+    description: "問題と答えを登録し、ランダム出題や苦手カードの復習ができます",
+    category: "study",
+    icon: "📚",
+    url: "https://kentaro0810.github.io/flashcard-app/",
+    version: "1.0.0"
   }
 ];
 
