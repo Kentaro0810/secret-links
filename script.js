@@ -77,6 +77,15 @@ const tools = [
     icon: "🎨",
     url: "https://kentaro0810.github.io/color-palette-maker/",
     version: "1.0.0"
+  },
+  {
+    id: "character-counter",
+    name: "文字数カウンター",
+    description: "文字数・行数・段落数・原稿用紙換算・読了時間を確認できます",
+    category: "study",
+    icon: "🔢",
+    url: "https://kentaro0810.github.io/character-counter/",
+    version: "1.0.0"
   }
 ];
 
