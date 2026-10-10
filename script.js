@@ -163,6 +163,15 @@ const tools = [
     icon: "📦",
     url: "https://kentaro0810.github.io/backup-center/",
     version: "1.0.0"
+  },
+  {
+    id: "gradient-maker",
+    name: "グラデーション作成",
+    description: "色・角度・種類を調整してCSSグラデーションを作成できます",
+    category: "design",
+    icon: "🌈",
+    url: "https://kentaro0810.github.io/gradient-maker/",
+    version: "1.0.0"
   }
 ];
 
