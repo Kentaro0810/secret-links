@@ -190,6 +190,15 @@ const tools = [
     icon: "🃏",
     url: "https://kentaro0810.github.io/memory-game/",
     version: "1.0.0"
+  },
+  {
+    id: "snake-game",
+    name: "スネークゲーム",
+    description: "ヘビを操作して食べ物を集め、最高スコアを目指すゲームです",
+    category: "game",
+    icon: "🐍",
+    url: "https://kentaro0810.github.io/snake-game/",
+    version: "1.0.0"
   }
 ];
 
