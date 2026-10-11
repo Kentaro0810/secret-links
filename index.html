@@ -4,12 +4,16 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="自作Webツールをまとめた個人用リンク集" />
+  <meta name="theme-color" content="#132b4f" />
+  <meta name="color-scheme" content="light" />
   <title>Secret Links</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+  <a class="skip-link" href="#linksTitle">本文へ移動</a>
   <main class="app">
     <section id="loginScreen" class="login-card" aria-labelledby="loginTitle">
+      <div class="brand-mark" aria-hidden="true">SL</div>
       <p class="badge">Private Link Collection</p>
       <h1 id="loginTitle">秘密のリンク集</h1>
       <p class="description">パスワードを知っている人だけがリンク集を表示できます。</p>
@@ -28,12 +32,13 @@
 
       <p id="loginMessage" class="message" role="status" aria-live="polite"></p>
       <p class="note">※ このサイトはGitHub Pages用の簡易ロックです。</p>
+      <p class="version-label">SecretLinks v2.0.0</p>
     </section>
 
     <section id="linksScreen" class="links-screen hidden" aria-labelledby="linksTitle">
       <header class="header">
         <div>
-          <p class="badge">Unlocked</p>
+          <p class="badge"><span class="status-dot" aria-hidden="true"></span>Unlocked</p>
           <h1 id="linksTitle">リンク集</h1>
           <p class="description">自分で作ったツールをまとめるページです。</p>
         </div>
@@ -70,7 +75,8 @@
 
       <p id="resultCount" class="result-count" aria-live="polite"></p>
       <section id="linkGrid" class="link-grid" aria-label="ツール一覧"></section>
-      <p id="emptyMessage" class="empty-message hidden">条件に合うツールはありません。</p>
+      <p id="emptyMessage" class="empty-message hidden">条件に合うツールはありません。検索語やカテゴリーを変更してください。</p>
+      <footer class="site-footer"><p>SecretLinks <span>v2.0.0</span></p><p>25 tools · Made for iPad and web</p></footer>
     </section>
   </main>
 
