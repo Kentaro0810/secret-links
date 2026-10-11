@@ -244,6 +244,15 @@ const tools = [
     icon: "🧩",
     url: "https://kentaro0810.github.io/json-formatter/",
     version: "1.0.0"
+  },
+  {
+    id: "html-css-preview",
+    name: "HTML・CSS・JavaScriptプレビュー",
+    description: "HTML・CSS・JavaScriptの表示と動作をその場で確認できます",
+    category: "development",
+    icon: "🧪",
+    url: "https://kentaro0810.github.io/html-css-preview/",
+    version: "1.1.0"
   }
 ];
 
