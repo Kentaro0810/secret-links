@@ -235,6 +235,15 @@ const tools = [
     icon: "📝",
     url: "https://kentaro0810.github.io/readme-generator/",
     version: "1.0.0"
+  },
+  {
+    id: "json-formatter",
+    name: "JSON整形",
+    description: "JSONの整形・圧縮・構文検証・ファイル保存ができます",
+    category: "development",
+    icon: "🧩",
+    url: "https://kentaro0810.github.io/json-formatter/",
+    version: "1.0.0"
   }
 ];
 
