@@ -259,6 +259,15 @@ const tools = [
     icon: "🧪",
     url: "https://kentaro0810.github.io/html-css-preview/",
     version: "1.1.0"
+  },
+  {
+    id: "seat-change-tool",
+    name: "席替えツール",
+    description: "前列指定・ブロック・隣指定に対応し、席の入れ替えや完成表のPNG保存ができます",
+    category: "selection",
+    icon: "🪑",
+    url: "https://kentaro0810.github.io/seat-change-tool/",
+    version: "1.5.0"
   }
 ];
 
