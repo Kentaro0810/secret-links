@@ -199,6 +199,15 @@ const tools = [
     icon: "🐍",
     url: "https://kentaro0810.github.io/snake-game/",
     version: "1.0.0"
+  },
+  {
+    id: "team-divider",
+    name: "チーム分け",
+    description: "参加者をシャッフルして、人数差の少ないチームに分けます",
+    category: "selection",
+    icon: "👥",
+    url: "https://kentaro0810.github.io/team-divider/",
+    version: "1.0.0"
   }
 ];
 
