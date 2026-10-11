@@ -226,6 +226,15 @@ const tools = [
     icon: "📊",
     url: "https://kentaro0810.github.io/league-table/",
     version: "1.0.0"
+  },
+  {
+    id: "readme-generator",
+    name: "README作成",
+    description: "入力内容からGitHub向けのREADME.mdを作成します",
+    category: "development",
+    icon: "📝",
+    url: "https://kentaro0810.github.io/readme-generator/",
+    version: "1.0.0"
   }
 ];
 
