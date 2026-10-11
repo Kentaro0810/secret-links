@@ -208,6 +208,15 @@ const tools = [
     icon: "👥",
     url: "https://kentaro0810.github.io/team-divider/",
     version: "1.0.0"
+  },
+  {
+    id: "tournament-maker",
+    name: "トーナメント表作成",
+    description: "参加者を配置し、試合の勝者を選んで優勝まで記録できます",
+    category: "selection",
+    icon: "🏆",
+    url: "https://kentaro0810.github.io/tournament-maker/",
+    version: "1.0.0"
   }
 ];
 
