@@ -415,3 +415,66 @@ body {
     padding-top: 20px;
   }
 }
+
+/* v2.0.3 actual category selector fix */
+.category-filter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  overflow: visible;
+  margin: 32px 0 0;
+  padding: 26px 30px 18px;
+  border-radius: 24px 24px 0 0;
+  background: #ffffff;
+}
+
+.category-filter + .result-count {
+  margin: 0;
+  padding: 10px 30px 30px;
+  background: #ffffff;
+}
+
+.category-filter + .result-count + .link-grid {
+  padding-top: 30px;
+  border-top: 1px solid #e2e9f2;
+}
+
+@media (max-width: 820px) {
+  .category-filter {
+    gap: 10px;
+    margin-top: 28px;
+    padding: 24px 24px 16px;
+  }
+
+  .category-filter + .result-count {
+    padding: 10px 24px 26px;
+  }
+
+  .category-filter + .result-count + .link-grid {
+    padding-top: 26px;
+  }
+}
+
+@media (max-width: 560px) {
+  .category-filter {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+    margin-top: 22px;
+    padding: 20px 16px 16px;
+    border-radius: 20px 20px 0 0;
+  }
+
+  .category-filter .filter-button {
+    width: 100%;
+    white-space: normal;
+  }
+
+  .category-filter + .result-count {
+    padding: 10px 18px 22px;
+  }
+
+  .category-filter + .result-count + .link-grid {
+    padding-top: 22px;
+  }
+}
