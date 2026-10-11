@@ -365,3 +365,53 @@ body {
     padding: 2px 18px 18px;
   }
 }
+
+/* v2.0.2 category section vertical spacing fix */
+.filter-nav {
+  margin-top: 28px;
+  padding: 24px 28px 16px;
+  border-radius: 24px 24px 0 0;
+  background: #ffffff;
+}
+
+.result-count {
+  margin: 0;
+  padding: 8px 30px 26px;
+  background: #ffffff;
+}
+
+.link-grid {
+  padding-top: 28px;
+  border-top: 1px solid #e2e9f2;
+}
+
+@media (max-width: 820px) {
+  .filter-nav {
+    margin-top: 24px;
+    padding: 22px 22px 14px;
+  }
+
+  .result-count {
+    padding: 8px 24px 22px;
+  }
+
+  .link-grid {
+    padding-top: 24px;
+  }
+}
+
+@media (max-width: 560px) {
+  .filter-nav {
+    margin-top: 20px;
+    padding: 20px 16px 14px;
+    border-radius: 20px 20px 0 0;
+  }
+
+  .result-count {
+    padding: 8px 18px 20px;
+  }
+
+  .link-grid {
+    padding-top: 20px;
+  }
+}
