@@ -217,6 +217,15 @@ const tools = [
     icon: "🏆",
     url: "https://kentaro0810.github.io/tournament-maker/",
     version: "1.0.0"
+  },
+  {
+    id: "league-table",
+    name: "リーグ戦順位表",
+    description: "総当たり戦を作成し、試合結果から順位を自動計算します",
+    category: "selection",
+    icon: "📊",
+    url: "https://kentaro0810.github.io/league-table/",
+    version: "1.0.0"
   }
 ];
 
