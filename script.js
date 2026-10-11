@@ -25,8 +25,14 @@ let searchQuery = "";
 let favorites = readStringArray(FAVORITES_KEY);
 let recentTools = readStringArray(RECENT_KEY);
 
-// 簡易ロック用のSHA-256ハッシュです。秘密情報の保護には使用できません。
-const PASSWORD_HASH = "85b9f7959d054476dc167362b03cf06aca7a8f6ddb1d716c132653d9cd5cfe5d";
+// GitHub Pages上の簡易ロックです。平文パスワードは保存しません。
+const PASSWORD_SALT_HEX = "0354eab18f414e928695ed4e69ac3fef";
+const PASSWORD_HASH_HEX = "c9fa923c3298fe37c9aaa43aa56c7dc9f7fc4503d01c59f97329a64d26205d77";
+const PBKDF2_ITERATIONS = 310000;
+const LOGIN_FAILURE_KEY = "secret-links-login-failures-v2";
+const LOGIN_LOCK_KEY = "secret-links-login-lock-until-v2";
+const MAX_LOGIN_FAILURES = 5;
+const LOGIN_LOCK_MS = 30_000;
 
 const tools = [
   {
@@ -256,14 +262,44 @@ const tools = [
   }
 ];
 
-async function sha256(text) {
-  const data = new TextEncoder().encode(text);
-  const hashBuffer = await crypto.subtle.digest("SHA-256", data);
-  return Array.from(new Uint8Array(hashBuffer))
-    .map((byte) => byte.toString(16).padStart(2, "0"))
-    .join("");
+function hexToBytes(hex) {
+  if (!/^[0-9a-f]+$/i.test(hex) || hex.length % 2 !== 0) throw new Error("Invalid hex.");
+  return new Uint8Array(hex.match(/.{2}/g).map((byte) => parseInt(byte, 16)));
 }
-
+async function derivePasswordHash(password) {
+  const bytes = new TextEncoder().encode(password.normalize("NFKC"));
+  const key = await crypto.subtle.importKey("raw", bytes, "PBKDF2", false, ["deriveBits"]);
+  const bits = await crypto.subtle.deriveBits({ name: "PBKDF2", hash: "SHA-256", salt: hexToBytes(PASSWORD_SALT_HEX), iterations: PBKDF2_ITERATIONS }, key, 256);
+  return new Uint8Array(bits);
+}
+function timingSafeEqual(left, right) {
+  if (left.length !== right.length) return false;
+  let difference = 0;
+  for (let index = 0; index < left.length; index += 1) difference |= left[index] ^ right[index];
+  return difference === 0;
+}
+function getLoginFailures() {
+  const value = Number(localStorage.getItem(LOGIN_FAILURE_KEY));
+  return Number.isInteger(value) && value > 0 ? value : 0;
+}
+function getLockRemainingMs() {
+  const lockUntil = Number(localStorage.getItem(LOGIN_LOCK_KEY));
+  return Number.isFinite(lockUntil) ? Math.max(0, lockUntil - Date.now()) : 0;
+}
+function clearLoginFailures() {
+  localStorage.removeItem(LOGIN_FAILURE_KEY);
+  localStorage.removeItem(LOGIN_LOCK_KEY);
+}
+function recordLoginFailure() {
+  const failures = getLoginFailures() + 1;
+  if (failures >= MAX_LOGIN_FAILURES) {
+    localStorage.setItem(LOGIN_FAILURE_KEY, "0");
+    localStorage.setItem(LOGIN_LOCK_KEY, String(Date.now() + LOGIN_LOCK_MS));
+    return true;
+  }
+  localStorage.setItem(LOGIN_FAILURE_KEY, String(failures));
+  return false;
+}
 function readStringArray(key) {
   try {
     const value = JSON.parse(localStorage.getItem(key));
@@ -398,27 +434,38 @@ function showMessage(text, type = "error") {
 
 async function handleLogin(event) {
   event.preventDefault();
-  const inputPassword = passwordInput.value;
-
-  if (!inputPassword) {
-    showMessage("パスワードを入力してください。");
+  const remainingMs = getLockRemainingMs();
+  if (remainingMs > 0) {
+    showMessage(`入力回数が多いため、あと${Math.ceil(remainingMs / 1000)}秒待ってください。`);
     return;
   }
-
-  const inputHash = await sha256(inputPassword);
-
-  if (inputHash === PASSWORD_HASH) {
-    sessionStorage.setItem(LOGIN_STORAGE_KEY, "true");
-    passwordInput.value = "";
-    showMessage("");
-    showLinksScreen();
-  } else {
-    showMessage("パスワードが違います。");
+  const inputPassword = passwordInput.value;
+  if (!inputPassword) { showMessage("パスワードを入力してください。"); return; }
+  const submitButton = loginForm.querySelector('button[type="submit"]');
+  submitButton.disabled = true;
+  submitButton.textContent = "確認中…";
+  try {
+    const inputHash = await derivePasswordHash(inputPassword);
+    if (timingSafeEqual(inputHash, hexToBytes(PASSWORD_HASH_HEX))) {
+      clearLoginFailures();
+      sessionStorage.setItem(LOGIN_STORAGE_KEY, "true");
+      passwordInput.value = "";
+      showMessage("");
+      showLinksScreen();
+      return;
+    }
+    const locked = recordLoginFailure();
+    showMessage(locked ? "入力回数が多いため、30秒間ロックしました。" : `パスワードが違います。あと${MAX_LOGIN_FAILURES - getLoginFailures()}回で一時ロックされます。`);
     passwordInput.value = "";
     passwordInput.focus();
+  } catch (error) {
+    console.error("Password verification failed:", error);
+    showMessage("パスワードを確認できませんでした。ページを再読み込みしてください。");
+  } finally {
+    submitButton.disabled = false;
+    submitButton.textContent = "入る";
   }
 }
-
 function logout() {
   sessionStorage.removeItem(LOGIN_STORAGE_KEY);
   showLoginScreen();
