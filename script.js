@@ -26,7 +26,7 @@ let favorites = readStringArray(FAVORITES_KEY);
 let recentTools = readStringArray(RECENT_KEY);
 
 // 簡易ロック用のSHA-256ハッシュです。秘密情報の保護には使用できません。
-const PASSWORD_HASH = "1471dd23b36096ee8f815f65e9ccba81276a5decfa8fe7bb54741cc5c938900e";
+const PASSWORD_HASH = "85b9f7959d054476dc167362b03cf06aca7a8f6ddb1d716c132653d9cd5cfe5d";
 
 const tools = [
   {
