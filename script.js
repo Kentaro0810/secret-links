@@ -14,25 +14,19 @@ const viewButtons = document.querySelectorAll(".view-button");
 const recentSection = document.getElementById("recentSection");
 const recentGrid = document.getElementById("recentGrid");
 const clearRecentButton = document.getElementById("clearRecentButton");
-const loginButton = loginForm.querySelector('button[type="submit"]');
 
 const LOGIN_STORAGE_KEY = "secret-links-login";
 const FAVORITES_KEY = "secret-links-favorites-v1";
 const RECENT_KEY = "secret-links-recent-v1";
 const RECENT_LIMIT = 6;
-const LOGIN_ATTEMPTS_KEY = "secret-links-login-attempts-v2";
-const PBKDF2_ITERATIONS = 310000;
-const PASSWORD_SALT_HEX = "21a4f641fbab47c8caeae1fce18e97da";
-const PASSWORD_DERIVED_KEY_HEX = "11c006cfdb263cb29056c85f02e0984eee647a4b31efa9db7364436fa239370e";
-const MAX_ATTEMPTS_BEFORE_DELAY = 5;
-const MAX_LOCK_MS = 5 * 60 * 1000;
 let currentCategory = "all";
 let currentView = "all";
 let searchQuery = "";
 let favorites = readStringArray(FAVORITES_KEY);
 let recentTools = readStringArray(RECENT_KEY);
 
-// パスワード自体は保存せず、PBKDF2-SHA-256で導出した値だけを照合します。
+// 簡易ロック用のSHA-256ハッシュです。秘密情報の保護には使用できません。
+const PASSWORD_HASH = "85b9f7959d054476dc167362b03cf06aca7a8f6ddb1d716c132653d9cd5cfe5d";
 
 const tools = [
   {
@@ -162,48 +156,112 @@ const tools = [
     version: "1.0.0"
   },
   {
-    id: "seat-change",
-    name: "席替えツール",
-    description: "前列指定・座席固定・隣接条件・タップ入れ替えに対応し、完成した座席表をPNG画像で保存できます",
-    category: "study",
-    icon: "🪑",
-    url: "https://kentaro0810.github.io/seat-change-tool/",
-    version: "1.5.0"
+    id: "backup-center",
+    name: "一括バックアップ管理",
+    description: "各ツールのブラウザーデータをまとめて保存・復元できます",
+    category: "management",
+    icon: "📦",
+    url: "https://kentaro0810.github.io/backup-center/",
+    version: "1.0.0"
+  },
+  {
+    id: "gradient-maker",
+    name: "グラデーション作成",
+    description: "色・角度・種類を調整してCSSグラデーションを作成できます",
+    category: "design",
+    icon: "🌈",
+    url: "https://kentaro0810.github.io/gradient-maker/",
+    version: "1.0.0"
+  },
+  {
+    id: "image-optimizer",
+    name: "画像圧縮・サイズ変更",
+    description: "画像の容量・大きさ・形式をブラウザー内で調整できます",
+    category: "design",
+    icon: "🖼️",
+    url: "https://kentaro0810.github.io/image-optimizer/",
+    version: "1.0.0"
+  },
+  {
+    id: "memory-game",
+    name: "神経衰弱",
+    description: "カードをめくって同じ絵柄のペアをそろえるゲームです",
+    category: "game",
+    icon: "🃏",
+    url: "https://kentaro0810.github.io/memory-game/",
+    version: "1.0.0"
+  },
+  {
+    id: "snake-game",
+    name: "スネークゲーム",
+    description: "ヘビを操作して食べ物を集め、最高スコアを目指すゲームです",
+    category: "game",
+    icon: "🐍",
+    url: "https://kentaro0810.github.io/snake-game/",
+    version: "1.0.0"
+  },
+  {
+    id: "team-divider",
+    name: "チーム分け",
+    description: "参加者をシャッフルして、人数差の少ないチームに分けます",
+    category: "selection",
+    icon: "👥",
+    url: "https://kentaro0810.github.io/team-divider/",
+    version: "1.0.0"
+  },
+  {
+    id: "tournament-maker",
+    name: "トーナメント表作成",
+    description: "参加者を配置し、試合の勝者を選んで優勝まで記録できます",
+    category: "selection",
+    icon: "🏆",
+    url: "https://kentaro0810.github.io/tournament-maker/",
+    version: "1.0.0"
+  },
+  {
+    id: "league-table",
+    name: "リーグ戦順位表",
+    description: "総当たり戦を作成し、試合結果から順位を自動計算します",
+    category: "selection",
+    icon: "📊",
+    url: "https://kentaro0810.github.io/league-table/",
+    version: "1.0.0"
+  },
+  {
+    id: "readme-generator",
+    name: "README作成",
+    description: "入力内容からGitHub向けのREADME.mdを作成します",
+    category: "development",
+    icon: "📝",
+    url: "https://kentaro0810.github.io/readme-generator/",
+    version: "1.0.0"
+  },
+  {
+    id: "json-formatter",
+    name: "JSON整形",
+    description: "JSONの整形・圧縮・構文検証・ファイル保存ができます",
+    category: "development",
+    icon: "🧩",
+    url: "https://kentaro0810.github.io/json-formatter/",
+    version: "1.0.0"
+  },
+  {
+    id: "html-css-preview",
+    name: "HTML・CSS・JavaScriptプレビュー",
+    description: "HTML・CSS・JavaScriptの表示と動作をその場で確認できます",
+    category: "development",
+    icon: "🧪",
+    url: "https://kentaro0810.github.io/html-css-preview/",
+    version: "1.1.0"
   }
 ];
 
-function hexToBytes(hex) {
-  return new Uint8Array(hex.match(/.{2}/g).map((value) => Number.parseInt(value, 16)));
-}
-async function derivePasswordKey(password) {
-  const material = await crypto.subtle.importKey("raw", new TextEncoder().encode(password), "PBKDF2", false, ["deriveBits"]);
-  const bits = await crypto.subtle.deriveBits({ name: "PBKDF2", hash: "SHA-256", salt: hexToBytes(PASSWORD_SALT_HEX), iterations: PBKDF2_ITERATIONS }, material, 256);
-  return new Uint8Array(bits);
-}
-function constantTimeEqual(left, right) {
-  if (left.length !== right.length) return false;
-  let difference = 0;
-  for (let index = 0; index < left.length; index += 1) difference |= left[index] ^ right[index];
-  return difference === 0;
-}
-function readLoginAttempts() {
-  try {
-    const value = JSON.parse(localStorage.getItem(LOGIN_ATTEMPTS_KEY));
-    return { count: Number.isInteger(value?.count) ? Math.max(0, value.count) : 0, lockedUntil: Number.isFinite(value?.lockedUntil) ? Math.max(0, value.lockedUntil) : 0 };
-  } catch { return { count: 0, lockedUntil: 0 }; }
-}
-function remainingLockSeconds() { return Math.max(0, Math.ceil((readLoginAttempts().lockedUntil - Date.now()) / 1000)); }
-function registerFailedAttempt() {
-  const count = readLoginAttempts().count + 1;
-  const level = Math.max(0, count - MAX_ATTEMPTS_BEFORE_DELAY);
-  const delayMs = level === 0 ? 0 : Math.min(MAX_LOCK_MS, 5000 * (2 ** (level - 1)));
-  localStorage.setItem(LOGIN_ATTEMPTS_KEY, JSON.stringify({ count, lockedUntil: Date.now() + delayMs }));
-  return delayMs;
-}
-function setLoginBusy(isBusy) {
-  passwordInput.disabled = isBusy;
-  loginButton.disabled = isBusy;
-  loginButton.textContent = isBusy ? "確認中…" : "入る";
+async function sha256(text) {
+  const data = new TextEncoder().encode(text);
+  const hashBuffer = await crypto.subtle.digest("SHA-256", data);
+  return Array.from(new Uint8Array(hashBuffer))
+    .map((byte) => byte.toString(16).padStart(2, "0"))
+    .join("");
 }
 
 function readStringArray(key) {
@@ -340,33 +398,25 @@ function showMessage(text, type = "error") {
 
 async function handleLogin(event) {
   event.preventDefault();
-  const lockSeconds = remainingLockSeconds();
-  if (lockSeconds > 0) {
-    showMessage(`試行回数が多いため、あと${lockSeconds}秒待ってください。`);
+  const inputPassword = passwordInput.value;
+
+  if (!inputPassword) {
+    showMessage("パスワードを入力してください。");
     return;
   }
-  const inputPassword = passwordInput.value;
-  if (!inputPassword) { showMessage("パスワードを入力してください。"); return; }
-  setLoginBusy(true);
-  try {
-    const inputKey = await derivePasswordKey(inputPassword);
-    if (constantTimeEqual(inputKey, hexToBytes(PASSWORD_DERIVED_KEY_HEX))) {
-      localStorage.removeItem(LOGIN_ATTEMPTS_KEY);
-      sessionStorage.setItem(LOGIN_STORAGE_KEY, "true");
-      passwordInput.value = "";
-      showMessage("");
-      showLinksScreen();
-    } else {
-      const delayMs = registerFailedAttempt();
-      const suffix = delayMs > 0 ? ` ${Math.ceil(delayMs / 1000)}秒後に再試行できます。` : "";
-      showMessage(`パスワードが違います。${suffix}`);
-      passwordInput.value = "";
-      passwordInput.focus();
-    }
-  } catch (error) {
-    console.error("Password verification failed:", error);
-    showMessage("確認処理に失敗しました。ページを再読み込みしてください。");
-  } finally { setLoginBusy(false); }
+
+  const inputHash = await sha256(inputPassword);
+
+  if (inputHash === PASSWORD_HASH) {
+    sessionStorage.setItem(LOGIN_STORAGE_KEY, "true");
+    passwordInput.value = "";
+    showMessage("");
+    showLinksScreen();
+  } else {
+    showMessage("パスワードが違います。");
+    passwordInput.value = "";
+    passwordInput.focus();
+  }
 }
 
 function logout() {
