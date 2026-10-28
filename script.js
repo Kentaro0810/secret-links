@@ -14,6 +14,7 @@ const viewButtons = document.querySelectorAll(".view-button");
 const recentSection = document.getElementById("recentSection");
 const recentGrid = document.getElementById("recentGrid");
 const clearRecentButton = document.getElementById("clearRecentButton");
+const portalMessage = document.getElementById("portalMessage");
 
 const LOGIN_STORAGE_KEY = "secret-links-login";
 const FAVORITES_KEY = "secret-links-favorites-v1";
@@ -58,7 +59,7 @@ const tools = [
     name: "自分用ToDo管理サイト",
     description: "やることを登録して管理できます",
     category: "management",
-    icon: "🎮",
+    icon: "✅",
     url: "https://kentaro0810.github.io/todo-site/",
     version: "1.0.0"
   },
@@ -67,7 +68,7 @@ const tools = [
     name: "ルーレット抽選アプリ",
     description: "登録した候補からルーレットで抽選できます",
     category: "selection",
-    icon: "⭐️",
+    icon: "🎡",
     url: "https://kentaro0810.github.io/roulette-picker/",
     version: "1.0.0"
   },
@@ -327,10 +328,19 @@ function isFavorite(id) {
   return favorites.includes(id);
 }
 
+let portalMessageTimer;
+function showPortalMessage(text) {
+  portalMessage.textContent = text;
+  clearTimeout(portalMessageTimer);
+  portalMessageTimer = setTimeout(() => { portalMessage.textContent = ""; }, 3500);
+}
 function toggleFavorite(id) {
-  favorites = isFavorite(id) ? favorites.filter((item) => item !== id) : [id, ...favorites];
+  const tool = tools.find((item) => item.id === id);
+  const removing = isFavorite(id);
+  favorites = removing ? favorites.filter((item) => item !== id) : [id, ...favorites];
   savePortalState();
   applyFilters();
+  showPortalMessage(`${tool?.name ?? "ツール"}をお気に入り${removing ? "から外しました" : "に追加しました"}。`);
 }
 
 function recordRecent(id) {
@@ -504,9 +514,13 @@ clearSearchButton.addEventListener("click", () => {
   applyFilters();
 });
 clearRecentButton.addEventListener("click", () => {
+  if (recentTools.length === 0) return;
+  const shouldClear = window.confirm("最近使ったツールの履歴をすべて削除しますか？");
+  if (!shouldClear) return;
   recentTools = [];
   savePortalState();
   applyFilters();
+  showPortalMessage("最近使ったツールの履歴を削除しました。");
 });
 
 applyFilters();
